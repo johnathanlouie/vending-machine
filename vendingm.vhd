@@ -7,10 +7,15 @@ port (clk : in bit;
       in_dime: in bit;
       in_nickel: in bit;
       in_quarter: in bit;
+      in_half_dollar: in bit;
+      in_dollar: in bit;
       rest: in bit;
 			num_item: in integer;
 			return_dime: out integer;
 			return_nickel: out integer;
+			return_quarter: out integer;
+			return_half_dollar: out integer;
+			return_dollar: out integer;
 			return_deposit: out integer;
 			release_num_gums: out integer;
 			display_num_gums: out integer;
@@ -74,6 +79,30 @@ begin
 		        elsif (in_quarter = '1') then
 		        deposit_cents <= deposit_cents + 25;
 		        display_total_deposit <= deposit_cents + 25;
+		        if (deposit_cents >= total_price) then
+		          release_num_gums <= num_gums_wanted;
+		          return_deposit <= deposit_cents - total_price;
+		          deposit_cents<=0;  
+		          message<=0;
+		          display_total_deposit<=0;
+		          display_num_gums<=0;
+		          next_s<=output;
+		        end if;
+		       elsif (in_half_dollar = '1') then
+		        deposit_cents <= deposit_cents + 50;
+		        display_total_deposit <= deposit_cents + 50;
+		        if (deposit_cents >= total_price) then
+		          release_num_gums <= num_gums_wanted;
+		          return_deposit <= deposit_cents - total_price;
+		          deposit_cents<=0;  
+		          message<=0;
+		          display_total_deposit<=0;
+		          display_num_gums<=0;
+		          next_s<=output;
+		        end if;
+		       elsif (in_dollar = '1') then
+		        deposit_cents <= deposit_cents + 100;
+		        display_total_deposit <= deposit_cents + 100;
 		        if (deposit_cents >= total_price) then
 		          release_num_gums <= num_gums_wanted;
 		          return_deposit <= deposit_cents - total_price;
