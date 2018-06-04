@@ -20,7 +20,9 @@ port (clk : in bit;
 			release_num_gums: out integer;
 			display_num_gums: out integer;
 			message: out integer;
-			display_total_deposit: out integer
+			display_total_deposit: out integer;
+			testc: out integer; -- just for testing purpose
+			state: out integer -- fot testing as well
 			);
 end vending;
 
@@ -29,8 +31,9 @@ architecture arch_vending of vending is
   signal current_s, next_s: state_type; 
   signal num_gums_wanted: integer:=0;
   signal deposit_cents: integer:=0;
-  signal counter: integer:=0;
+  signal counter: integer:=0; -- just for testing
   signal total_price: integer:=0;
+  signal num_gums: integer:=0;
 begin
 
   
@@ -38,18 +41,30 @@ begin
     begin 
       if (rest='1') then
         current_s <= reset;
+        num_gums <= 0;
+        state <= 1;
       elsif (num_item > 0) then
         current_s <= selectQ;
+        num_gums <= num_item;
+        state <= 2;
       else
         current_s <= next_s;
+        if(next_s = coins) then
+          state <= 3;
+        elsif (next_s = output) then
+          state <= 4;
+          num_gums <= 0;
+        end if;
       end if;
 		end process;
 		
-		process(clk, current_s)
+		process(clk)
 		  begin
+		    counter <= counter+1;
 		    if (current_s = selectQ) then
-		      num_gums_wanted <= num_item;
-		      total_price <= 20*num_item;
+		      num_gums_wanted <= num_gums;
+		      total_price <= 20*num_gums;
+		      testc <= total_price;
 		      next_s <= coins;
 		    elsif (current_s = coins) then
 		      if (in_dime='1') then

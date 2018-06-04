@@ -31,7 +31,8 @@ PORT(
 			display_num_gums: out integer;
 			message: out integer;
 			display_total_deposit: out integer;
-			testc: out integer
+			testc: out integer;
+			state: out integer
 );
 END COMPONENT;
  
@@ -57,13 +58,14 @@ signal display_num_gums : integer:=0;
 signal message : integer:=0;
 signal display_total_deposit : integer:=0; 
 signal testc: integer:=0;
+signal state: integer:=0;
 -- Clock period definitions
 constant clock_period : time := 100 ps;
  
 BEGIN
  
 -- Instantiate the Unit Under Test (UUT)
-dut: vending PORT MAP (
+uut: vending PORT MAP (
       clk => clk,
       in_dime => in_dime,
       in_nickel => in_nickel,
@@ -82,7 +84,8 @@ dut: vending PORT MAP (
 			display_num_gums => display_num_gums,
 			message => message,
 			display_total_deposit => display_total_deposit,
-			testc => testc
+			testc => testc,
+			state => state
 );
  
 -- Clock process definitions
