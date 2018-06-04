@@ -1,4 +1,3 @@
-
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
  
@@ -101,7 +100,7 @@ end process;
 stim_proc: process
 begin
   -- 1 gum with dollar coins
-wait for 100 ps;
+wait for 200 ps;
 num_item <= 1;
 wait for 200 ps;
 num_item <= 0;
@@ -147,6 +146,17 @@ wait for 200 ps;
 in_dime <= '1';
 wait for 200 ps;
 in_dime <= '0';
+
+  -- 2 gum with dollar coins
+wait for 200 ps;
+num_item <= 2;
+wait for 200 ps;
+num_item <= 0;
+wait for 200 ps;
+in_dollar <= '1';
+wait for 200 ps;
+in_dollar <= '0';
+
 wait;
 end process;
  
