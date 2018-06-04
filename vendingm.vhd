@@ -60,7 +60,8 @@ begin
 		
 		process(clk)
 		  begin
-		    counter <= counter+1;
+		    if (clk'event and clk='1') then
+		      
 		    if (current_s = selectQ) then
 		      num_gums_wanted <= num_gums;
 		      total_price <= 20*num_gums;
@@ -149,6 +150,7 @@ begin
 		        num_gums_wanted <=0;
 		        deposit_cents<=0;
 		        next_s <= initial;
+		     end if;
 		     end if;
 		end process;
 		
