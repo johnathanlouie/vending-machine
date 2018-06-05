@@ -99,13 +99,29 @@ end process;
 -- Stimulus process
 stim_proc: process
 begin
+-- 1 gum with nickels and reset
+wait for 100 ps;
+num_item <= 1;
+wait for 200 ps;
+num_item <= 0;
+wait for 100 ps;
+in_nickel <= '1';
+wait for 100 ps;
+in_nickel <= '1';
+wait for 100 ps;
+in_nickel <= '1';
+wait for 100 ps;
+in_nickel <= '0';
+rest <= '1';
+wait for 100 ps;
+rest <= '0';
 
   -- 1 gum with dollar coins
 wait for 200 ps;
 num_item <= 1;
 wait for 200 ps;
 num_item <= 0;
-wait for 200 ps;
+wait for 100 ps;
 in_dollar <= '1';
 wait for 200 ps;
 in_dollar <= '0';
@@ -115,7 +131,7 @@ wait for 200 ps;
 num_item <= 1;
 wait for 200 ps;
 num_item <= 0;
-wait for 200 ps;
+wait for 100 ps;
 in_half_dollar <= '1';
 wait for 200 ps;
 in_half_dollar <= '0';
@@ -125,23 +141,11 @@ wait for 200 ps;
 num_item <= 1;
 wait for 200 ps;
 num_item <= 0;
-wait for 200 ps;
+wait for 100 ps;
 in_quarter <= '1';
 wait for 200 ps;
  in_quarter <= '0';
  
--- 1 gum with nickels
-wait for 200 ps;
-num_item <= 1;
-wait for 200 ps;
-num_item <= 0;
-wait for 200 ps;
-in_nickel <= '1';
-wait for 200 ps;
-in_nickel <= '1';
-wait for 200 ps;
-in_nickel <= '0';
-
 -- 1 gum with dimes
 wait for 200 ps;
 num_item <= 1;
@@ -152,11 +156,23 @@ in_dime <= '1';
 wait for 200 ps;
 in_dime <= '1';
 wait for 200 ps;
-in_dime <= '1';
-wait for 200 ps;
-in_dime <= '1';
-wait for 200 ps;
 in_dime <= '0';
+
+-- 1 gum with nickels
+wait for 200 ps;
+num_item <= 1;
+wait for 200 ps;
+num_item <= 0;
+wait for 200 ps;
+in_nickel <= '1';
+wait for 200 ps;
+in_nickel <= '1';
+wait for 200 ps;
+in_nickel <= '1';
+wait for 200 ps;
+in_nickel <= '1';
+wait for 200 ps;
+in_nickel <= '0';
 
   -- 2 gum with dollar coins
 wait for 200 ps;
