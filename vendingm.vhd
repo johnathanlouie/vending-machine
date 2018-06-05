@@ -11,7 +11,13 @@ entity vending is
 		in_half_dollar        : in  bit;
 		in_dollar             : in  bit;
 		rest                  : in  bit;
+		num_nickels_stored    : in  integer;
+		num_dimes_stored      : in  integer;
+		num_quarters_stored   : in  integer;
+		num_halfs_stored      : in  integer;
+		num_dollars_stored    : in  integer;
 		num_item              : in  integer;
+		num_gums_stored       : in  integer;
 		return_nickel         : out integer;
 		return_dime           : out integer;
 		return_quarter        : out integer;
@@ -65,19 +71,19 @@ begin
 			variable c5, c10, c25, c50, c100 : integer := 0;
 		begin
 			while cents > 0 loop
-				if cents >= 100 then
+				if cents >= 100 and num_dollars_stored >= 1 then
 					cents := cents - 100;
 					c100 := c100 + 1;
-				elsif cents >= 50 then
+				elsif cents >= 50 and num_halfs_stored >= 1 then
 					cents := cents - 50;
 					c50 := c50 + 1;
-				elsif cents >= 25 then
+				elsif cents >= 25 and num_quarters_stored >= 1 then
 					cents := cents - 25;
 					c25 := c25 + 1;
-				elsif cents >= 10 then
+				elsif cents >= 10 and num_dimes_stored >= 1 then
 					cents := cents - 10;
 					c10 := c10 + 1;
-				elsif cents >= 5 then
+				elsif cents >= 5 and num_nickels_stored >= 1 then
 					cents := cents - 5;
 					c5 := c5 + 1;
 				end if;
@@ -91,26 +97,38 @@ begin
 		end get_change;
 
 		procedure add_deposit (coin_value : in integer) is
+			variable total_cents_stored : integer := 0;
 		begin
 			deposit_cents <= deposit_cents + coin_value;
 			display_total_deposit <= deposit_cents + coin_value;
 			if deposit_cents >= total_price then
-				release_num_gums <= num_gums_wanted;
-				get_change(deposit_cents - total_price);
-				message <= 0;
-				display_total_deposit <= 0;
-				display_num_gums <= 0;
-				next_s <= output;
+				total_cents_stored := num_dollars_stored + num_halfs_stored + num_quarters_stored + num_dimes_stored + num_nickels_stored;
+				if total_cents_stored < deposit_cents - total_price then
+					message <= 3;
+					next_s <= reset;
+				else
+					release_num_gums <= num_gums_wanted;
+					get_change(deposit_cents - total_price);
+					message <= 0;
+					display_total_deposit <= 0;
+					display_num_gums <= 0;
+					next_s <= output;
+				end if;
 			end if;
 		end add_deposit;
 
 	begin
 		if clk'event and clk = '1' then
 			if current_s = selectQ then
-				num_gums_wanted <= num_gums;
-				total_price <= 20 * num_gums;
-				testc <= total_price;
-				next_s <= coins;
+				if num_gums_stored >= num_item then
+					num_gums_wanted <= num_gums;
+					total_price <= 20 * num_gums;
+					testc <= total_price;
+					next_s <= coins;
+				else
+					message <= 2;
+					next_s <= reset;
+				end if;
 			elsif current_s = coins then
 				if in_nickel = '1' then
 					add_deposit(5);
@@ -129,6 +147,9 @@ begin
 				display_num_gums <= 0;
 				return_nickel <= 0;
 				return_dime <= 0;
+				return_quarter <= 0;
+				return_half_dollar <= 0;
+				return_dollar <= 0;
 				release_num_gums <= 0;
 				num_gums_wanted <= 0;
 				next_s <= initial;
