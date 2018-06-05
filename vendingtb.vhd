@@ -99,6 +99,7 @@ end process;
 -- Stimulus process
 stim_proc: process
 begin
+
   -- 1 gum with dollar coins
 wait for 200 ps;
 num_item <= 1;
@@ -108,6 +109,16 @@ wait for 200 ps;
 in_dollar <= '1';
 wait for 200 ps;
 in_dollar <= '0';
+
+  -- 1 gum with half dollar coins
+wait for 200 ps;
+num_item <= 1;
+wait for 200 ps;
+num_item <= 0;
+wait for 200 ps;
+in_half_dollar <= '1';
+wait for 200 ps;
+in_half_dollar <= '0';
 
 -- 1 gum with quarters
 wait for 200 ps;
@@ -157,6 +168,30 @@ in_dollar <= '1';
 wait for 200 ps;
 in_dollar <= '0';
 
+  -- 2 gum with half dollar coins
+wait for 200 ps;
+num_item <= 2;
+wait for 200 ps;
+num_item <= 0;
+wait for 200 ps;
+in_half_dollar <= '1';
+wait for 200 ps;
+in_half_dollar <= '0';
+  
+-- 2 gum with dime and quarter
+wait for 200 ps;
+num_item <= 2;
+wait for 200 ps;
+num_item <= 0;
+wait for 200 ps;
+in_dime <= '1';
+wait for 100 ps;
+in_dime <= '0';
+in_quarter <= '1';
+wait for 100 ps;
+in_quarter <= '1';
+wait for 200 ps;
+in_quarter <= '0';
 wait;
 end process;
  
