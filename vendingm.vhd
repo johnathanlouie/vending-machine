@@ -60,20 +60,20 @@ begin
 	end process;
 	
 	process(clk)
-	procedure add_deposit (coin_value : in integer) is
-	begin
-		deposit_cents <= deposit_cents + coin_value;
-		display_total_deposit <= deposit_cents + coin_value;
-		if (deposit_cents >= total_price) then
-			release_num_gums <= num_gums_wanted;
-			return_deposit <= deposit_cents - total_price;
-			deposit_cents <= 0;
-			message <= 0;
-			display_total_deposit <= 0;
-			display_num_gums <= 0;
-			next_s <= output;
-		end if;
-	end add_deposit;
+		procedure add_deposit (coin_value : in integer) is
+		begin
+			deposit_cents <= deposit_cents + coin_value;
+			display_total_deposit <= deposit_cents + coin_value;
+			if (deposit_cents >= total_price) then
+				release_num_gums <= num_gums_wanted;
+				return_deposit <= deposit_cents - total_price;
+				deposit_cents <= 0;
+				message <= 0;
+				display_total_deposit <= 0;
+				display_num_gums <= 0;
+				next_s <= output;
+			end if;
+		end add_deposit;
 	begin
 		if (clk'event and clk = '1') then
 			if (current_s = selectQ) then
@@ -94,25 +94,25 @@ begin
 					add_deposit(100);
 				end if;
 			elsif (current_s = output) then
-				message<=0;
-				display_total_deposit<=0;
-				display_num_gums<=0;
-				return_deposit<=0;
-				return_nickel<=0;
-				return_dime<=0;
-				release_num_gums<=0;
-				num_gums_wanted <=0;
-				deposit_cents<=0;
+				message <= 0;
+				display_total_deposit <= 0;
+				display_num_gums <= 0;
+				return_deposit <= 0;
+				return_nickel <= 0;
+				return_dime <= 0;
+				release_num_gums <= 0;
+				num_gums_wanted <= 0;
+				deposit_cents <= 0;
 				next_s <= initial;
 			elsif (current_s = reset) then
-				message<=0;
-				display_total_deposit<=0;
-				display_num_gums<=0;
-				return_deposit<=deposit_cents;
-				return_nickel<=0;
-				return_dime<=0;
-				num_gums_wanted <=0;
-				deposit_cents<=0;
+				message <= 0;
+				display_total_deposit <= 0;
+				display_num_gums <= 0;
+				return_deposit <= deposit_cents;
+				return_nickel <= 0;
+				return_dime <= 0;
+				num_gums_wanted <= 0;
+				deposit_cents <= 0;
 				next_s <= initial;
 			end if;
 		end if;
