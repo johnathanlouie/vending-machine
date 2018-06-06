@@ -121,12 +121,11 @@ begin
 		procedure add_deposit (coin_value : in integer) is
 		begin
 			deposit_cents <= deposit_cents + coin_value;
-			display_total_deposit <= deposit_cents + coin_value;
 			if deposit_cents >= total_price then
 				release_num_gums <= num_gums_wanted;
+				num_gums_stored <= num_gums_stored - num_gums_wanted;
 				get_change(deposit_cents - total_price);
 				message <= 0;
-				display_total_deposit <= 0;
 				display_num_gums <= 0;
 				next_s <= output;
 			end if;
@@ -163,7 +162,6 @@ begin
 				end if;
 			elsif current_s = output then
 				message <= 0;
-				display_total_deposit <= 0;
 				display_num_gums <= 0;
 				return_nickel <= 0;
 				return_dime <= 0;
@@ -175,12 +173,12 @@ begin
 				next_s <= initial;
 			elsif current_s = reset then
 				message <= 0;
-				display_total_deposit <= 0;
 				display_num_gums <= 0;
 				get_change(deposit_cents);
 				num_gums_wanted <= 0;
 				next_s <= initial;
 			end if;
+			display_total_deposit <= deposit_cents;
 		end if;
 	end process;
 
