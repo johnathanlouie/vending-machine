@@ -10,26 +10,26 @@ ARCHITECTURE behavior OF tb_vending IS
 
 	COMPONENT vending
 		PORT (
-			clk : in bit;
-			in_dime: in bit;
-			in_nickel: in bit;
-			in_quarter: in bit;
-			in_half_dollar: in bit;
-			in_dollar: in bit;
-			rest: in bit;
-			num_item: in integer;
-			return_dime: out integer;
-			return_nickel: out integer;
-			return_quarter: out integer;
-			return_half_dollar: out integer;
-			return_dollar: out integer;
-			return_deposit: out integer;
-			release_num_gums: out integer;
-			display_num_gums: out integer;
-			message: out integer;
-			display_total_deposit: out integer;
-			testc: out integer;
-			state: out integer
+			clk                   : in  bit;
+			in_dime               : in  bit;
+			in_nickel             : in  bit;
+			in_quarter            : in  bit;
+			in_half_dollar        : in  bit;
+			in_dollar             : in  bit;
+			rest                  : in  bit;
+			num_item              : in  integer;
+			return_dime           : out integer;
+			return_nickel         : out integer;
+			return_quarter        : out integer;
+			return_half_dollar    : out integer;
+			return_dollar         : out integer;
+			return_deposit        : out integer;
+			release_num_gums      : out integer;
+			display_num_gums      : out integer;
+			message               : out integer;
+			display_total_deposit : out integer;
+			testc                 : out integer;
+			state                 : out integer
 		);
 	END COMPONENT;
 
