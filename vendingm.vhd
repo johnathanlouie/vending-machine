@@ -11,13 +11,7 @@ entity vending is
 		in_half_dollar        : in  bit;
 		in_dollar             : in  bit;
 		rest                  : in  bit;
-		num_nickels_stored    : in  integer;
-		num_dimes_stored      : in  integer;
-		num_quarters_stored   : in  integer;
-		num_halfs_stored      : in  integer;
-		num_dollars_stored    : in  integer;
 		num_item              : in  integer;
-		num_gums_stored       : in  integer;
 		return_nickel         : out integer;
 		return_dime           : out integer;
 		return_quarter        : out integer;
@@ -34,12 +28,18 @@ end vending;
 
 architecture arch_vending of vending is
 	type   state_type is (initial, selectQ, coins, output, reset);
-	signal current_s, next_s : state_type;
-	signal num_gums_wanted   : integer := 0;
-	signal deposit_cents     : integer := 0;
-	signal counter           : integer := 0; -- just for testing
-	signal total_price       : integer := 0;
-	signal num_gums          : integer := 0;
+	signal current_s, next_s   : state_type;
+	signal num_gums_wanted     : integer := 0;
+	signal deposit_cents       : integer := 0;
+	signal counter             : integer := 0; -- just for testing
+	signal total_price         : integer := 0;
+	signal num_gums            : integer := 0;
+	signal num_gums_stored     : integer := 1000;
+	signal num_nickels_stored  : integer := 1000;
+	signal num_dimes_stored    : integer := 1000;
+	signal num_quarters_stored : integer := 1000;
+	signal num_halfs_stored    : integer := 1000;
+	signal num_dollars_stored  : integer := 1000;
 
 begin
 
@@ -69,51 +69,66 @@ begin
 		procedure get_change (cents2 : in integer) is
 			variable cents : integer := cents2;
 			variable c5, c10, c25, c50, c100 : integer := 0;
+			variable c5s   : integer := num_nickels_stored;
+			variable c10s  : integer := num_dimes_stored;
+			variable c25s  : integer := num_quarters_stored;
+			variable c50s  : integer := num_halfs_stored;
+			variable c100s : integer := num_dollars_stored;
 		begin
 			while cents > 0 loop
-				if cents >= 100 and num_dollars_stored >= 1 then
+				if cents >= 100 and c100s >= 1 then
 					cents := cents - 100;
+					c100s := c100s - 1;
 					c100 := c100 + 1;
 				elsif cents >= 50 and num_halfs_stored >= 1 then
 					cents := cents - 50;
+					c50s := c50s - 1;
 					c50 := c50 + 1;
 				elsif cents >= 25 and num_quarters_stored >= 1 then
 					cents := cents - 25;
+					c25s := c25s - 1;
 					c25 := c25 + 1;
 				elsif cents >= 10 and num_dimes_stored >= 1 then
 					cents := cents - 10;
+					c10s := c10s - 1;
 					c10 := c10 + 1;
 				elsif cents >= 5 and num_nickels_stored >= 1 then
 					cents := cents - 5;
+					c5s := c5s - 1;
 					c5 := c5 + 1;
+				else
+					exit;
 				end if;
 			end loop;
-			return_nickel <= c5;
-			return_dime <= c10;
-			return_quarter <= c25;
-			return_half_dollar <= c50;
-			return_dollar <= c100;
-			deposit_cents <= 0;
+			if cents = 0 then
+				return_nickel <= c5;
+				return_dime <= c10;
+				return_quarter <= c25;
+				return_half_dollar <= c50;
+				return_dollar <= c100;
+				num_nickels_stored <= c5s;
+				num_dimes_stored <= c10s;
+				num_quarters_stored <= c25s;
+				num_halfs_stored <= c50s;
+				num_dollars_stored <= c100s;
+				deposit_cents <= 0;
+			else
+				message <= 3;
+				next_s <= reset;
+			end if;
 		end get_change;
 
 		procedure add_deposit (coin_value : in integer) is
-			variable total_cents_stored : integer := 0;
 		begin
 			deposit_cents <= deposit_cents + coin_value;
 			display_total_deposit <= deposit_cents + coin_value;
 			if deposit_cents >= total_price then
-				total_cents_stored := num_dollars_stored + num_halfs_stored + num_quarters_stored + num_dimes_stored + num_nickels_stored;
-				if total_cents_stored < deposit_cents - total_price then
-					message <= 3;
-					next_s <= reset;
-				else
-					release_num_gums <= num_gums_wanted;
-					get_change(deposit_cents - total_price);
-					message <= 0;
-					display_total_deposit <= 0;
-					display_num_gums <= 0;
-					next_s <= output;
-				end if;
+				release_num_gums <= num_gums_wanted;
+				get_change(deposit_cents - total_price);
+				message <= 0;
+				display_total_deposit <= 0;
+				display_num_gums <= 0;
+				next_s <= output;
 			end if;
 		end add_deposit;
 
@@ -131,14 +146,19 @@ begin
 				end if;
 			elsif current_s = coins then
 				if in_nickel = '1' then
+					num_nickels_stored <= num_nickels_stored + 1;
 					add_deposit(5);
 				elsif in_dime = '1' then
+					num_dimes_stored <= num_dimes_stored + 1;
 					add_deposit(10);
 				elsif in_quarter = '1' then
+					num_quarters_stored <= num_quarters_stored + 1;
 					add_deposit(25);
 				elsif in_half_dollar = '1' then
+					num_halfs_stored <= num_halfs_stored + 1;
 					add_deposit(50);
 				elsif in_dollar = '1' then
+					num_dollars_stored <= num_dollars_stored + 1;
 					add_deposit(100);
 				end if;
 			elsif current_s = output then
