@@ -5,22 +5,22 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity vending is
 	port (
 		clk                   : in  bit;
-		in_nickel             : in  bit;
-		in_dime               : in  bit;
-		in_quarter            : in  bit;
-		in_half_dollar        : in  bit;
-		in_dollar             : in  bit;
-		rest                  : in  bit;
-		num_item              : in  integer;
-		return_nickel         : out integer;
-		return_dime           : out integer;
-		return_quarter        : out integer;
-		return_half_dollar    : out integer;
-		return_dollar         : out integer;
-		release_num_gums      : out integer;
-		display_num_gums      : out integer;
-		message               : out integer;
-		display_total_deposit : out integer;
+		in_nickel             : in  bit := '0';
+		in_dime               : in  bit := '0';
+		in_quarter            : in  bit := '0';
+		in_half_dollar        : in  bit := '0';
+		in_dollar             : in  bit := '0';
+		rest                  : in  bit := '0';
+		num_item              : in  integer := 0;
+		return_nickel         : out integer := 0;
+		return_dime           : out integer := 0;
+		return_quarter        : out integer := 0;
+		return_half_dollar    : out integer := 0;
+		return_dollar         : out integer := 0;
+		release_num_gums      : out integer := 0;
+		display_num_gums      : out integer := 0;
+		message               : out integer := 0;
+		display_total_deposit : out integer := 0;
 		testc                 : out integer; -- just for testing purpose
 		state                 : out integer  -- fot testing as well
 	);
